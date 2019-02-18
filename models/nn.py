@@ -120,7 +120,7 @@ class ClassifierEngine(object):
         if save_model:
             self.model.save('model.model')
 
-    def _plot_training(slef, history):
+    def _plot_training(self, history):
         acc = history.history['acc']
         val_acc = history.history['val_acc']
         loss = history.history['loss']
@@ -150,19 +150,16 @@ class ClassifierEngine(object):
         preds = model.predict(x)
         return preds
 
-    def evaluate(self, confusion_matrix, save_plot=True):
-        df_cm = pd.DataFrame(conf_matrix, index=list(self.label_to_class.values()),
-                             columns=list(self.label_to_class.values()))
-        plt.figure(figsize=(10, 7))
-        plot = sn.heatmap(df_cm, annot=True)
-        plt.show()
-        plot.figure.savefig('ConfusionMatrix.png')
+    # def evaluate(self, confusion_matrix, save_plot=True):
+    #     df_cm = pd.DataFrame(conf_matrix, index=list(self.label_to_class.values()),
+    #                          columns=list(self.label_to_class.values()))
+    #     plt.figure(figsize=(10, 7))
+    #     plot = sn.heatmap(df_cm, annot=True)
+    #     plt.show()
+    #     plot.figure.savefig('ConfusionMatrix.png')
 
     def load_pretrained_model(self, model):
         return load_model(model)
-
-    def __getitem__(self):
-        return self.model
 
     def __repr__(self):
         return "VGG19 Model Transfer Learning"
