@@ -118,26 +118,6 @@ class ClassifierEngine(object):
         if save_model:
             self.model.save('model.model')
 
-    # def _plot_training(self, history):
-    #     acc = history.history['acc']
-    #     val_acc = history.history['val_acc']
-    #     loss = history.history['loss']
-    #     val_loss = history.history['val_loss']
-    #     epochs = range(len(acc))
-
-    #     plt.plot(epochs, acc, 'r')
-    #     plt.plot(epochs, val_acc, 'b')
-    #     plt.title('Training and validation accuracy')
-    #     plt.legend(['Accuracy', 'Validation Accuracy'], loc='lower right')
-    #     plt.savefig('Accuracy Plot')
-    #     plt.figure()
-    #     plt.plot(epochs, loss, 'r')
-    #     plt.plot(epochs, val_loss, 'b')
-    #     plt.title('Training and validation loss')
-    #     plt.legend(['Loss', 'Val Loss'], loc='upper right')
-    #     plt.savefig('Loss Plot')
-    #     plt.show()
-
     def predict(self, model, img, target_size):
         if img.size != target_size:
             img = img.resize(target_size)
