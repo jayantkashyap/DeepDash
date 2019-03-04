@@ -19,5 +19,7 @@ def preprocess_image(image):
     return image
 
 
-def predict(image, iteration):
-    pass
+def predict(image, model_name, model_iteration):
+  if model_name != Config.MODEL or \
+    model_iteration != Config.ITERATION:
+    Config.MODEL = load_model

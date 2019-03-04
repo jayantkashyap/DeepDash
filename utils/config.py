@@ -1,3 +1,6 @@
+from keras.models import load_model
+
+
 class Config:
     NB_CLASSES = 10
     EPOCHS = 30
@@ -14,5 +17,13 @@ class Config:
 
     # MODEL
     MODEL_NAME = 'model'
-    ITERATIONS = 0
+    ITERATION = 0
     ENTITY_NAME = ''
+
+    MODEL = None
+
+
+def load_model():
+
+    # Config.MODEL = load_model
+    pass
