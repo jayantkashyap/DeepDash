@@ -8,11 +8,6 @@ class Config:
 
     # TRAINING HYPERPARAMETERS
 
-    # CALLBACK
-    PATIENCE = 3
-    MIN_LEARNING_RATE = 0
-    MONITOR = 'val_loss'
-
     # TRAINING
     OPTIMIZER = 'adam'
     LOSS = 'categorical_crossentropy'
