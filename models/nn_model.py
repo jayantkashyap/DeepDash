@@ -1,16 +1,21 @@
 from keras.applications.vgg19 import VGG19, preprocess_input, decode_predictions
-from keras.layers import Dense, Conv2D, MaxPooling2D, BatchNormalization, Dropout, Activation, GlobalAveragePooling2D
+from keras.layers import Dense, Conv2D, MaxPooling2D, BatchNormalization,\
+                        Dropout, Activation, GlobalAveragePooling2D
 from keras.models import Model, Sequential, load_model
 from keras_preprocessing import image
 from keras.callbacks import ReduceLROnPlateau
-from config import config
+
+import sys
+sys.path.append('..')
+from utils.config import Config
 
 
 class NNModel(object):
 
-    def __init__(self, nb_classes):
+    def __init__(self):
         self.base_model = VGG19(weights='imagenet', include_top=False)
-        self.nb_classes = nb_classes
+        self.nb_classes = Config.NB_CLASSES
+        self.model = None
 
     def _model(self):
         x = self.base_model.output
@@ -24,11 +29,22 @@ class NNModel(object):
         x = Activation('relu')(x)
         x = Dropout(0.5)(x)
         predictions = Dense(self.nb_classes, activation='softmax')(x)
-        model = Model(inputs=self.base_model.input, outputs=predictions)
-        return model
+        self.model = Model(inputs=self.base_model.input, outputs=predictions)
 
     def _setup_to_transfer_learn(self):
-        pass
+        for layer in self.base_model.layers:
+            layer.trainable = False
 
-    def build_model(self):
-        pass
+    def build(self):
+        self._setup_to_transfer_learn()
+        self._model()
+        return self.model
+
+
+if __name__ == "__main__":
+    from keras import backend as K
+
+    model = NNModel().build()
+    print(model.summary())
+    
+    K.clear_session()
