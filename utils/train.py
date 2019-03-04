@@ -64,8 +64,13 @@ def train():
                                   class_weight='auto',
                                   callbacks=[reduce_lr_callback])
 
-    os.makedirs('')
+    if not os.path.isdir(f'../data/{Config.ENTITY_NAME}'):
+        os.makedirs(f'../data/{Config.ENTITY_NAME}')
+
     model.save(
-        f'{Config.MODEL_NAME}_{Config.ENTITY_NAME}_{Config.ITERATIONS}.h5')
+        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATIONS}.h5')
+
+    pickle.dump(train_generator.classes, open(
+        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATIONS}.p', 'wb'))
 
     return history, "Model Trained Successfully!"
