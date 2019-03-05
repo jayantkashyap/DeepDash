@@ -23,8 +23,10 @@ def preprocess_image(image):
 def predict(image, entity_name, model_name, model_iteration):
     if model_name != Config.MODEL or \
             model_iteration != Config.ITERATION:
-        Config.MODEL = load_trained_model("")
-        Config.LABELS_TO_CLASSES = load_trained_classes("")
+        load_trained_model(
+            f"../data/{entity_name}/{model_name}_{model_iteration}.h5")
+        load_trained_classes(
+            f"../data/{entity_name}/{model_name}_{model_iteration}_classes.p")
 
     image = preprocess_image(image)
     preds = Config.MODEL.predict(image)
