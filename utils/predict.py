@@ -21,6 +21,9 @@ def preprocess_image(image):
 
 
 def predict(image, entity_name, model_name, model_iteration):
+    if Config.MODEL == None:
+        return "No Model Trained"
+
     if model_name != Config.MODEL or \
             model_iteration != Config.ITERATION:
         load_trained_model(

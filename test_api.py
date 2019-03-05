@@ -7,6 +7,6 @@ import requests
 for i in range(10):
     json_data = {"msg": f"{i}"}
     response = requests.post(
-        "http://localhost:5000/getStatus", json=json_data)
+        "http://localhost:5000/train")
 
 print(response.text)
