@@ -16,12 +16,16 @@ app = Flask(__name__)
 def training():
     Config.ENTITY_NAME = "animals"
     _, status = train()
-    # print(Config.MODEL.summary())
-    print()
+    print(Config.MODEL.summary())
     print(Config.MODEL_NAME)
+    print(Config.LABELS_TO_CLASSES)
     return status
 
 
 if __name__ == "__main__":
+    import keras.backend as K
+
+    K.clear_session()
+
     load_trained_model('')
     app.run()

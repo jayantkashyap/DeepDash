@@ -48,6 +48,7 @@ def build_dataset_generator():
 
 
 def train():
+
     model = NNModel().build()
     reduce_lr_callback = ReduceLROnPlateau(monitor='val_loss',
                                            factor=0.1,
@@ -69,14 +70,16 @@ def train():
 
     Config.MODEL = model
     Config.MODEL_NAME = "nn_model"
+    Config.LABELS_TO_CLASSES = train_generator.classes
 
-    if not os.path.isdir(f'../data/{Config.ENTITY_NAME}'):
-        os.makedirs(f'../data/{Config.ENTITY_NAME}')
+    if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
+        print(os.path.isdir(f'data/{Config.ENTITY_NAME}'))
+        os.makedirs(f'data/{Config.ENTITY_NAME}')
 
     model.save(
-        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.h5')
+        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.h5')
 
     pickle.dump(train_generator.classes, open(
-        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
-    # history = None
+        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
+
     return history, "Model Trained Successfully!"
