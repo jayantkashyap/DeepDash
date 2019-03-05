@@ -1,4 +1,5 @@
 from keras.models import load_model
+import pickle
 
 
 class Config:
@@ -21,9 +22,12 @@ class Config:
     ENTITY_NAME = ''
 
     MODEL = None
+    LABELS_TO_CLASSES = None
 
 
-def load_model():
+def load_trained_model(path_to_model):
+    Config.MODEL = load_model(path_to_model)
 
-    # Config.MODEL = load_model
-    pass
+
+def load_trained_classes(path_to_classes):
+    Config.CLASSES = pickle.load(open(path_to_classes, 'rb'))

@@ -1,10 +1,11 @@
 from keras.preprocessing.image import img_to_array
 from keras.applications import imagenet_utils
 import numpy as np
+import pickle
 import sys
 
 sys.path.append('..')
-from utils.config import Config
+from utils.config import Config, load_trained_model, load_trained_classes
 
 
 def preprocess_image(image):
@@ -19,7 +20,13 @@ def preprocess_image(image):
     return image
 
 
-def predict(image, model_name, model_iteration):
-  if model_name != Config.MODEL or \
-    model_iteration != Config.ITERATION:
-    Config.MODEL = load_model
+def predict(image, entity_name, model_name, model_iteration):
+    if model_name != Config.MODEL or \
+            model_iteration != Config.ITERATION:
+        Config.MODEL = load_trained_model("")
+        Config.LABELS_TO_CLASSES = load_trained_classes("")
+
+    image = preprocess_image(image)
+    preds = Config.MODEL.predict(image)
+
+    return preds

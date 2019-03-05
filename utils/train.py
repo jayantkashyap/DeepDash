@@ -71,6 +71,6 @@ def train():
         f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.h5')
 
     pickle.dump(train_generator.classes, open(
-        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.p', 'wb'))
+        f'../data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
     return history, "Model Trained Successfully!"
