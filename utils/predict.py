@@ -1,5 +1,6 @@
 from keras.preprocessing.image import img_to_array
-from keras.applications import imagenet_utils
+from keras.applications.vgg19 import preprocess_input
+import tensorflow as tf
 import numpy as np
 import pickle
 import sys
@@ -15,23 +16,27 @@ def preprocess_image(image):
     image = image.resize(Config.TARGET_SIZE)
     image = img_to_array(image)
     image = np.expand_dims(image, axis=0)
-    image = imagenet_utils.preprocess_input(image)
+    image = preprocess_input(image)
 
     return image
 
 
 def predict(image, entity_name, model_name, model_iteration):
-    if Config.MODEL == None:
-        return "No Model Trained"
+    if (Config.MODEL == None) or (Config.DEFAULT_GRAPH == None):
+        return
 
-    if model_name != Config.MODEL or \
+    if entity_name != Config.ENTITY_NAME or\
+            model_name != Config.MODEL or \
             model_iteration != Config.ITERATION:
+
         load_trained_model(
-            f"data/{entity_name}/{model_name}_{model_iteration}.h5")
+            f"data/{entity_name}/{model_name}_{model_iteration}.model")
         load_trained_classes(
             f"data/{entity_name}/{model_name}_{model_iteration}_classes.p")
 
     image = preprocess_image(image)
-    preds = Config.MODEL.predict(image)
+
+    with Config.DEFAULT_GRAPH.as_default():
+        preds = Config.MODEL.predict(image)
 
     return preds

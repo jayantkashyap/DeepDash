@@ -1,7 +1,9 @@
 from keras.preprocessing import image
 from keras.callbacks import ReduceLROnPlateau, BaseLogger, ProgbarLogger, RemoteMonitor
 from keras.applications.vgg19 import preprocess_input
+import tensorflow as tf
 from PIL import Image
+import numpy as np
 import pickle
 import sys
 import cv2
@@ -49,6 +51,10 @@ def build_dataset_generator():
 
 def train():
 
+    import keras.backend as K
+    K.clear_session()
+    tf.reset_default_graph()
+
     model = NNModel().build()
     reduce_lr_callback = ReduceLROnPlateau(monitor='val_loss',
                                            factor=0.1,
@@ -69,6 +75,8 @@ def train():
                                   callbacks=[reduce_lr_callback])
 
     Config.MODEL = model
+    Config.DEFAULT_GRAPH = tf.get_default_graph()
+
     Config.MODEL_NAME = "nn_model"
     Config.LABELS_TO_CLASSES = train_generator.classes
 
@@ -77,7 +85,7 @@ def train():
         os.makedirs(f'data/{Config.ENTITY_NAME}')
 
     model.save(
-        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.h5')
+        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.model')
 
     pickle.dump(train_generator.classes, open(
         f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
