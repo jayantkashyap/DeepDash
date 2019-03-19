@@ -1,4 +1,5 @@
 from PIL import Image
+from tqdm import tqdm
 import numpy as np
 import pickle
 import sys
@@ -48,8 +49,28 @@ def build_nn_dataset_generator():
 
 
 def build_knn_dataset():
-    pass
+    train_data = []
+    labels = []
+
+    data_extensions = ['jpg', 'png']
+
+    for item in tqdm(list(os.walk(os.path.join(Config.DATASET_DIR, Config.ENTITY_NAME)))[2:]):
+
+        if (item[0].split(os.path.sep)[2] == 'val') or (item[0].split(os.path.sep)[2] == 'test'):
+            break
+
+        if len(item[2]) > 0:
+            label = item[0].split(os.path.sep)[-1]
+            for image_name in item[2]:
+                if image_name.split('.')[-1] in data_extensions:
+
+                    train_data.append(cv2.imread(
+                        os.path.join(item[0], image_name)))
+                    labels.append(label)
+
+    return train_data, labels
 
 
 if __name__ == "__main__":
-    pass
+    Config.ENTITY_NAME = 'animal'
+    build_knn_dataset()
