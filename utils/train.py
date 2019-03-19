@@ -12,41 +12,7 @@ import os
 sys.path.append('..')
 from utils.config import Config
 from models.nn_model import NNModel
-
-
-def build_dataset_generator():
-
-    train_datagen = image.ImageDataGenerator(
-        preprocessing_function=preprocess_input,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        fill_mode='nearest',
-    )
-
-    val_datagen = image.ImageDataGenerator(
-        preprocessing_function=preprocess_input,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        fill_mode='nearest',
-    )
-
-    train_generator = train_datagen.flow_from_directory(
-        f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/train',
-        target_size=Config.TARGET_SIZE,
-        batch_size=Config.BATCH_SIZE
-    )
-
-    validation_generator = val_datagen.flow_from_directory(
-        f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/val',
-        target_size=Config.TARGET_SIZE,
-        batch_size=Config.BATCH_SIZE
-    )
-
-    return train_generator, validation_generator
+from utils.data_generator import build_nn_dataset_generator
 
 
 def train():
@@ -61,7 +27,7 @@ def train():
                                            patience=3,
                                            min_lr=0)
 
-    train_generator, validatation_generator = build_dataset_generator()
+    train_generator, validatation_generator = build_nn_dataset_generator()
 
     model.compile(optimizer=Config.OPTIMIZER,
                   loss=Config.LOSS, metrics=Config.METRICS)
@@ -78,7 +44,10 @@ def train():
     Config.DEFAULT_GRAPH = tf.get_default_graph()
 
     Config.MODEL_NAME = "nn_model"
-    Config.LABELS_TO_CLASSES = train_generator.classes
+    Config.LABELS_TO_CLASSES = {v: k for k,
+                                v in train_generator.class_indices.items()}
+
+    print(Config.LABELS_TO_CLASSES)
 
     if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
         print(os.path.isdir(f'data/{Config.ENTITY_NAME}'))
@@ -87,7 +56,7 @@ def train():
     model.save(
         f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.model')
 
-    pickle.dump(train_generator.classes, open(
+    pickle.dump(Config.LABELS_TO_CLASSES, open(
         f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
     return history, "Model Trained Successfully!"

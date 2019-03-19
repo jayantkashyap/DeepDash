@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
+from werkzeug import secure_filename
 from models.handle import handle
-from utils.config import Config, load_trained_classes, load_trained_model
+from utils.config import Config, load_trained_model
 from utils.train import train
 from utils.predict import predict
 from PIL import Image
@@ -13,10 +14,14 @@ import os
 app = Flask(__name__)
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
 @app.route('/train', methods=['GET', 'POST'])
 def training():
 
-    print(Config.LABELS_TO_CLASSES)
     Config.ENTITY_NAME = "animal"
     _, status = train()
 
@@ -25,6 +30,8 @@ def training():
 
 @app.route('/predict', methods=['GET', 'POST'])
 def prediction():
+    result = {}
+
     Config.ENTITY_NAME = 'animal'
     Config.ITERATION = 0
     Config.MODEL_NAME = 'nn_model'
@@ -33,9 +40,35 @@ def prediction():
     preds = predict(image, entity_name='nist',
                     model_name='nn_model', model_iteration=0)
 
+    if preds is not None:
+        result["Class"] = preds[0]
+        result["Probability"] = preds[1]
+        # result["Image_Name"] = Image_Name
+        result["Message"] = "Successfull Prediction"
+        result["Status"] = 0
+    else:
+        result["Class"] = ""
+        result["Probability"] = None
+        # result["Image_Name"] = Image_Name
+        result["Message"] = "Successfull Prediction"
+        result["Status"] = 0
+
     print(preds)
-    return ""
+    return jsonify(result)
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    data = request.form['entity_name']
+    print(data)
+    files = request.files.getlist('files[]')
+    if not os.path.exists(data):
+        os.makedirs(data)
+
+    for f in files:
+        f.save(os.path.join(data, secure_filename(f.filename)))
+    return "Files Uploaded Successfully!!"
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")
