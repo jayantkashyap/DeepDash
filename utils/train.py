@@ -27,7 +27,8 @@ def train():
                                            patience=3,
                                            min_lr=0)
 
-    train_generator, validatation_generator = build_nn_dataset_generator()
+    # train_generator, validatation_generator = build_nn_dataset_generator()
+    train_generator = build_nn_dataset_generator()
 
     model.compile(optimizer=Config.OPTIMIZER,
                   loss=Config.LOSS, metrics=Config.METRICS)
@@ -35,8 +36,8 @@ def train():
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=train_generator.n//train_generator.batch_size,
                                   epochs=Config.EPOCHS,
-                                  validation_data=validatation_generator,
-                                  validation_steps=validatation_generator.n//validatation_generator.batch_size,
+                                  #   validation_data=validatation_generator,
+                                  #   validation_steps=validatation_generator.n//validatation_generator.batch_size,
                                   class_weight='auto',
                                   callbacks=[reduce_lr_callback])
 

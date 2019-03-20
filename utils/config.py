@@ -37,6 +37,7 @@ def load_trained_model(path):
         return
 
     Config.MODEL = load_model(f"{path}.model")
+    Config.MODEL_NAME = 'nn_model'
     Config.DEFAULT_GRAPH = tf.get_default_graph()
     Config.LABELS_TO_CLASSES = pickle.load(open(f"{path}_classes.p", 'rb'))
 

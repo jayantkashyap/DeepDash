@@ -24,14 +24,14 @@ def build_nn_dataset_generator():
         fill_mode='nearest',
     )
 
-    val_datagen = image.ImageDataGenerator(
-        preprocessing_function=preprocess_input,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        fill_mode='nearest',
-    )
+    # val_datagen = image.ImageDataGenerator(
+    #     preprocessing_function=preprocess_input,
+    #     width_shift_range=0.2,
+    #     height_shift_range=0.2,
+    #     shear_range=0.2,
+    #     zoom_range=0.2,
+    #     fill_mode='nearest',
+    # )
 
     train_generator = train_datagen.flow_from_directory(
         f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/train',
@@ -39,13 +39,13 @@ def build_nn_dataset_generator():
         batch_size=Config.BATCH_SIZE
     )
 
-    validation_generator = val_datagen.flow_from_directory(
-        f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/val',
-        target_size=Config.TARGET_SIZE,
-        batch_size=Config.BATCH_SIZE
-    )
+    # validation_generator = val_datagen.flow_from_directory(
+    #     f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/val',
+    #     target_size=Config.TARGET_SIZE,
+    #     batch_size=Config.BATCH_SIZE
+    # )
 
-    return train_generator, validation_generator
+    return train_generator  # , validation_generator
 
 
 def build_knn_dataset():
@@ -64,8 +64,13 @@ def build_knn_dataset():
             for image_name in item[2]:
                 if image_name.split('.')[-1] in data_extensions:
 
-                    train_data.append(cv2.imread(
-                        os.path.join(item[0], image_name)))
+                    image = cv2.imread(os.path.join(item[0], image_name))
+
+                    image = cv2.resize(image, (300, 300),
+                                       interpolation=cv2.INTER_AREA)
+
+                    train_data.append(image)
+
                     labels.append(label)
 
     return train_data, labels
