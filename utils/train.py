@@ -1,7 +1,3 @@
-from keras.preprocessing import image
-from keras.callbacks import ReduceLROnPlateau, BaseLogger, ProgbarLogger, RemoteMonitor
-from keras.applications.vgg19 import preprocess_input
-import tensorflow as tf
 from PIL import Image
 import numpy as np
 import pickle
@@ -16,6 +12,8 @@ from utils.data_generator import build_nn_dataset_generator
 
 
 def train():
+    from keras.callbacks import ReduceLROnPlateau
+    import tensorflow as tf
 
     import keras.backend as K
     K.clear_session()

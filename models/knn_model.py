@@ -41,6 +41,8 @@ class KNN_Model(object):
         pickle.dump(Config.LABELS_TO_CLASSES, open(
             f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
+        return "Model Trained Successfullu!"
+
     def l1_distance(self, image, image_array):
         return np.sum(np.abs(image_array - image), axis=1)
 
@@ -73,18 +75,14 @@ class KNN_Model(object):
 
         if self.distance == 'L1':
             k_preds = np.argsort(self.l1_distance(
-                np.ravel(image), self.x_train))[:self.k]            
+                np.ravel(image), self.x_train))[:self.k]
 
         if self.distance == 'L2':
             k_preds = np.argsort(self.l2_distance(
                 np.ravel(image), self.y_train))[:self.k]
-        
+
         lables = [self.y_train[i] for i in k_preds]
         labels = [Config.LABELS_TO_CLASSES.get(i) for i in labels]
         prediction = Counter(labels).most_common(1)[0][0]
 
         return prediction
-
-    
-
-
