@@ -54,14 +54,14 @@ def build_knn_dataset():
 
     data_extensions = ['jpg', 'png']
 
-    for item in tqdm(list(os.walk(os.path.join(Config.DATASET_DIR, Config.ENTITY_NAME)))[2:]):
+    for item in list(os.walk(os.path.join(Config.DATASET_DIR, Config.ENTITY_NAME)))[2:]:
 
         if (item[0].split(os.path.sep)[2] == 'val') or (item[0].split(os.path.sep)[2] == 'test'):
             break
 
         if len(item[2]) > 0:
             label = item[0].split(os.path.sep)[-1]
-            for image_name in item[2]:
+            for image_name in tqdm(item[2]):
                 if image_name.split('.')[-1] in data_extensions:
 
                     image = cv2.imread(os.path.join(item[0], image_name))
