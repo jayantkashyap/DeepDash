@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from werkzeug import secure_filename
-from models.handle import handle
+from models import knn_model, nn_model
 from utils.config import Config, load_trained_model
 from utils.train import train
 from utils.predict import predict
@@ -9,7 +9,6 @@ import numpy as np
 import sys
 import io
 import os
-
 
 app = Flask(__name__)
 
@@ -22,10 +21,17 @@ def index():
 @app.route('/train', methods=['GET', 'POST'])
 def training():
 
-    Config.ENTITY_NAME = "animal"
-    _, status = train()
+    if request.get_json()['modelName'] == 'KNN_model':
+        Config.ENTITY_NAME = request.get_json()['entityName']
+        Config.ITERATION = request.get_json()['iteration']
 
-    return status
+        return knn_model.KNN_model().train()
+    
+    if request.get_json()['modelName'] == 'NN_model':
+        Config.ENTITY_NAME = request.get_json()['entityName']
+        Config.ITERATION = request.get_json()['iteration']
+
+        return train()
 
 
 @app.route('/predict', methods=['GET', 'POST'])
@@ -71,4 +77,4 @@ def upload():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=4500)

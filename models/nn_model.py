@@ -1,9 +1,4 @@
-from keras.applications.vgg19 import VGG19, preprocess_input, decode_predictions
-from keras.layers import Dense, Conv2D, MaxPooling2D, BatchNormalization,\
-                        Dropout, Activation, GlobalAveragePooling2D
-from keras.models import Model, Sequential, load_model
-from keras_preprocessing import image
-from keras.callbacks import ReduceLROnPlateau
+"""Convolution Neural Network Model"""
 
 import sys
 sys.path.append('..')
@@ -13,11 +8,19 @@ from utils.config import Config
 class NNModel(object):
 
     def __init__(self):
+
+        from keras.applications.vgg19 import VGG19
+
         self.base_model = VGG19(weights='imagenet', include_top=False)
         self.nb_classes = Config.NB_CLASSES
         self.model = None
 
     def _model(self):
+
+        from keras.layers import Dense, BatchNormalization, Dropout, \
+            Activation, GlobalAveragePooling2D
+        from keras.models import Model
+
         x = self.base_model.output
         x = GlobalAveragePooling2D()(x)
         x = Dense(1024)(x)
@@ -46,5 +49,5 @@ if __name__ == "__main__":
 
     model = NNModel().build()
     print(model.summary())
-    
+
     K.clear_session()

@@ -11,7 +11,7 @@ from models.nn_model import NNModel
 from utils.data_generator import build_nn_dataset_generator
 
 
-def train():
+def nn_train():
     from keras.callbacks import ReduceLROnPlateau
     import tensorflow as tf
 
@@ -58,4 +58,4 @@ def train():
     pickle.dump(Config.LABELS_TO_CLASSES, open(
         f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
-    return history, "Model Trained Successfully!"
+    return "Model Trained Successfully!"

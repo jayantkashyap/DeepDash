@@ -15,6 +15,7 @@ from utils.data_generator import build_knn_dataset
 class KNN_Model(object):
 
     def __init__(self, k, distance='L2'):
+        """KNN Classifier"""
         self.model = None
         self.k = k
         self.distance = distance
@@ -44,7 +45,7 @@ class KNN_Model(object):
         pickle.dump(Config.LABELS_TO_CLASSES, open(
             f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
-        return "Model Trained Successfullu!"
+        return "Model Trained Successfully!"
 
     def predict(self, image, entity_name, model_name, model_iteration):
 
