@@ -1,6 +1,3 @@
-from keras.preprocessing.image import img_to_array
-from keras.applications.vgg19 import preprocess_input
-import tensorflow as tf
 import numpy as np
 import pickle
 import sys
@@ -11,6 +8,9 @@ from utils.config import Config, load_trained_model
 
 
 def preprocess_image(image):
+    from keras.preprocessing.image import img_to_array
+    from keras.applications.vgg19 import preprocess_input
+
     if image.mode != "RGB":
         image.convert("RGB")
 

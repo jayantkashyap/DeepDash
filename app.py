@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from werkzeug import secure_filename
 from models import knn_model, nn_model
 from utils.config import Config, load_trained_model
-from utils.train import train
+from utils.train import nn_train
 from utils.predict import predict
 from PIL import Image
 import numpy as np
@@ -26,12 +26,12 @@ def training():
         Config.ITERATION = request.get_json()['iteration']
 
         return knn_model.KNN_model().train()
-    
+
     if request.get_json()['modelName'] == 'NN_model':
         Config.ENTITY_NAME = request.get_json()['entityName']
         Config.ITERATION = request.get_json()['iteration']
 
-        return train()
+        return nn_train()
 
 
 @app.route('/predict', methods=['GET', 'POST'])
@@ -77,4 +77,7 @@ def upload():
 
 
 if __name__ == "__main__":
+    import keras
+    import tensorflow as tf
+
     app.run(host="0.0.0.0", port=4500)
