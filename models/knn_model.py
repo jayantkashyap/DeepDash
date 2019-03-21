@@ -1,3 +1,5 @@
+"""KNN Classifier Model"""
+
 from collections import Counter
 import numpy as np
 import pickle
@@ -12,10 +14,11 @@ from utils.data_generator import build_knn_dataset
 
 class KNN_Model(object):
 
-    def __init__(self, k, distance):
+    def __init__(self, k, distance='L2'):
         self.model = None
         self.k = k
-        self.distance = 'L2'
+        self.distance = distance
+        self.x_train, self.y_train = None, None
 
     def train(self):
         from sklearn.preprocessing import LabelEncoder
@@ -28,7 +31,7 @@ class KNN_Model(object):
         self.y_train = le.fit_transform(labels)
 
         Config.LABELS_TO_CLASSES = {i: c for i, c in enumerate(le.classes_)}
-        Config.MODEL == self.x_train, self.y_train
+        Config.MODEL = (self.x_train, self.y_train)
         Config.MODEL_NAME = 'knn_model'
 
         if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
@@ -43,15 +46,9 @@ class KNN_Model(object):
 
         return "Model Trained Successfullu!"
 
-    def l1_distance(self, image, image_array):
-        return np.sum(np.abs(image_array - image), axis=1)
-
-    def l2_distance(self, image, image_array):
-        return np.sqrt(np.sum(np.square(image_array - image), axis=1))
-
     def predict(self, image, entity_name, model_name, model_iteration):
 
-        if Config.MODEL == None:
+        if Config.MODEL is None:
             if os.path.exists(f"data/{entity_name}/{model_name}_{model_iteration}.p"):
                 Config.MODEL = pickle.load(
                     open(f"data/{entity_name}/{model_name}_{model_iteration}.p", 'rb'))
@@ -74,15 +71,23 @@ class KNN_Model(object):
         self.x_train, self.y_train = Config.MODEL
 
         if self.distance == 'L1':
-            k_preds = np.argsort(self.l1_distance(
+            k_preds = np.argsort(l1_distance(
                 np.ravel(image), self.x_train))[:self.k]
 
         if self.distance == 'L2':
-            k_preds = np.argsort(self.l2_distance(
+            k_preds = np.argsort(l2_distance(
                 np.ravel(image), self.y_train))[:self.k]
 
         lables = [self.y_train[i] for i in k_preds]
-        labels = [Config.LABELS_TO_CLASSES.get(i) for i in labels]
-        prediction = Counter(labels).most_common(1)[0][0]
+        lables = [Config.LABELS_TO_CLASSES.get(i) for i in lables]
+        prediction = Counter(lables).most_common(1)[0][0]
 
         return prediction
+
+
+def l1_distance(image, image_array):
+    return np.sum(np.abs(image_array - image), axis=1)
+
+
+def l2_distance(image, image_array):
+    return np.sqrt(np.sum(np.square(image_array - image), axis=1))

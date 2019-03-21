@@ -44,7 +44,7 @@ def predict(image, entity_name, model_name, model_iteration):
     try:
         with Config.DEFAULT_GRAPH.as_default():
             preds = Config.MODEL.predict(image)
-    except Exception as e:
+    except Exception:
         status = 2
         return "", None,
 
