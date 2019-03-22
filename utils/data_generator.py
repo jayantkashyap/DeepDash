@@ -34,7 +34,8 @@ def build_nn_dataset_generator():
     # )
 
     train_generator = train_datagen.flow_from_directory(
-        f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/train',
+        # f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/train',
+        os.path.join(Config.DATASET_DIR, Config.ENTITY_NAME, 'train'),
         target_size=Config.TARGET_SIZE,
         batch_size=Config.BATCH_SIZE
     )

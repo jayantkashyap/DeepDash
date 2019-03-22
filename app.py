@@ -21,15 +21,15 @@ def index():
 @app.route('/train', methods=['GET', 'POST'])
 def training():
 
-    if request.get_json()['modelName'] == 'KNN_model':
+    if request.get_json()['modelName'] == 'KNN':
         Config.ENTITY_NAME = request.get_json()['entityName']
-        Config.ITERATION = request.get_json()['iteration']
+        Config.ITERATION = int(request.get_json()['iteration'])
 
-        return knn_model.KNN_model().train()
+        return knn_model.KNN_Model(5).train()
 
-    if request.get_json()['modelName'] == 'NN_model':
+    if request.get_json()['modelName'] == 'DNN':
         Config.ENTITY_NAME = request.get_json()['entityName']
-        Config.ITERATION = request.get_json()['iteration']
+        Config.ITERATION = int(request.get_json()['iteration'])
 
         return nn_train()
 
