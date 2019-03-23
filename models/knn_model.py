@@ -33,7 +33,7 @@ class KNN_Model(object):
 
         Config.LABELS_TO_CLASSES = {i: c for i, c in enumerate(le.classes_)}
         Config.MODEL = (self.x_train, self.y_train)
-        Config.MODEL_NAME = 'knn_model'
+        Config.MODEL_NAME = 'KNN'
 
         if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
             print(os.path.isdir(f'data/{Config.ENTITY_NAME}'))
@@ -55,7 +55,7 @@ class KNN_Model(object):
                     open(f"data/{entity_name}/{model_name}_{model_iteration}.p", 'rb'))
                 Config.LABELS_TO_CLASSES = pickle.load(
                     open(f"data/{entity_name}/{model_name}_{model_iteration}_classes.p", 'rb'))
-                Config.MODEL_NAME = "knn_model"
+                Config.MODEL_NAME = "KNN"
             else:
                 return None, None, 1, "No Model Trained"
 
@@ -67,7 +67,7 @@ class KNN_Model(object):
                 open(f"data/{entity_name}/{model_name}_{model_iteration}.p", 'rb'))
             Config.LABELS_TO_CLASSES = pickle.load(
                 open(f"data/{entity_name}/{model_name}_{model_iteration}_classes.p", 'rb'))
-            Config.MODEL_NAME = "knn_model"
+            Config.MODEL_NAME = "KNN"
 
         self.x_train, self.y_train = Config.MODEL
 

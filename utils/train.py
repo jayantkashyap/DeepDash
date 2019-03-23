@@ -42,11 +42,11 @@ def nn_train():
     Config.MODEL = model
     Config.DEFAULT_GRAPH = tf.get_default_graph()
 
-    Config.MODEL_NAME = "nn_model"
+    Config.MODEL_NAME = "DNN"
     Config.LABELS_TO_CLASSES = {v: k for k,
                                 v in train_generator.class_indices.items()}
 
-    print(Config.LABELS_TO_CLASSES)
+    # print(Config.LABELS_TO_CLASSES)
 
     if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
         print(os.path.isdir(f'data/{Config.ENTITY_NAME}'))

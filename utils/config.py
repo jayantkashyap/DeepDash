@@ -1,6 +1,6 @@
 class Config:
     NB_CLASSES = 3
-    EPOCHS = 1
+    EPOCHS = 3
     BATCH_SIZE = 32
     DATASET_DIR = 'repo'
     TARGET_SIZE = (224, 224)
@@ -13,7 +13,7 @@ class Config:
     METRICS = ['accuracy']
 
     # MODEL
-    MODEL_NAME = 'nn_model'
+    MODEL_NAME = ''
     ITERATION = 0
     ENTITY_NAME = ''
     DEFAULT_GRAPH = None
@@ -33,11 +33,10 @@ def load_trained_model(path):
     K.clear_session()
     tf.reset_default_graph()
 
-    if not os.path.exists(path):
+    if not os.path.exists(f"{path}.model"):
         return
 
     Config.MODEL = load_model(f"{path}.model")
-    Config.MODEL_NAME = 'nn_model'
     Config.DEFAULT_GRAPH = tf.get_default_graph()
     Config.LABELS_TO_CLASSES = pickle.load(open(f"{path}_classes.p", 'rb'))
 

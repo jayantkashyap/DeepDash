@@ -27,10 +27,12 @@ def predict(image, entity_name, model_name, model_iteration):
 
     if (Config.MODEL == None):
         if os.path.exists(f"data/{entity_name}/{model_name}_{model_iteration}.model"):
+            # print(os.path.exists(
+            #     f"data/{entity_name}/{model_name}_{model_iteration}.model"))
             load_trained_model(
-                f"data/{entity_name}/{model_name}_{model_iteration}")
+                f"data/{entity_name}/{model_name}_{1}")
         else:
-            return None, None, 1, "No Model Trained"
+            return "No Model Trained"
 
     if entity_name != Config.ENTITY_NAME or\
             model_name != Config.MODEL or \
@@ -41,12 +43,7 @@ def predict(image, entity_name, model_name, model_iteration):
 
     image = preprocess_image(image)
 
-    try:
-        with Config.DEFAULT_GRAPH.as_default():
-            preds = Config.MODEL.predict(image)
-    except Exception:
-        status = 2
-        return "", None,
+    with Config.DEFAULT_GRAPH.as_default():
+        preds = Config.MODEL.predict(image)
 
-    return Config.LABELS_TO_CLASSES[np.argmax(preds)],\
-        round(np.argmax(preds)*100, 2), status, message
+    return f"{Config.LABELS_TO_CLASSES[np.argmax(preds)]} with Probability {np.max(preds)*100}"

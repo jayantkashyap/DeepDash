@@ -5,8 +5,10 @@ from utils.config import Config, load_trained_model
 from utils.train import nn_train
 from utils.predict import predict
 from PIL import Image
+import base64
 import numpy as np
 import sys
+import json
 import io
 import os
 
@@ -30,37 +32,34 @@ def training():
     if request.get_json()['modelName'] == 'DNN':
         Config.ENTITY_NAME = request.get_json()['entityName']
         Config.ITERATION = int(request.get_json()['iteration'])
-
+        Config.NB_CLASSES = len(os.listdir(os.path.join(
+            Config.DATASET_DIR, Config.ENTITY_NAME, 'train')))
         return nn_train()
 
 
 @app.route('/predict', methods=['GET', 'POST'])
 def prediction():
-    result = {}
 
-    Config.ENTITY_NAME = 'animal'
-    Config.ITERATION = 0
-    Config.MODEL_NAME = 'nn_model'
+    Config.ENTITY_NAME = request.get_json()['entityName']
+    Config.ITERATION = request.get_json()['iteration']
+    Config.MODEL_NAME = request.get_json()['modelName']
+    image = request.get_json()['image']
 
-    image = Image.open('cats_00001.jpg')
-    preds = predict(image, entity_name='nist',
-                    model_name='nn_model', model_iteration=0)
+    image = base64.b64decode(str(image))
+    image = Image.open(io.BytesIO(image))
 
-    if preds is not None:
-        result["Class"] = preds[0]
-        result["Probability"] = preds[1]
-        # result["Image_Name"] = Image_Name
-        result["Message"] = "Successfull Prediction"
-        result["Status"] = 0
-    else:
-        result["Class"] = ""
-        result["Probability"] = None
-        # result["Image_Name"] = Image_Name
-        result["Message"] = "Successfull Prediction"
-        result["Status"] = 0
+    # if model_name == 'KNN':
+    #     preds = knn_model.KNN_Model(), predict(
+    #         image, entity_name, 'KNN', model_iteration)
+    # elif model_name == 'DNN':
 
-    print(preds)
-    return jsonify(result)
+    if Config.MODEL_NAME == 'DNN':
+        preds = predict(image, entity_name=Config.ENTITY_NAME,
+                        model_name=Config.MODEL_NAME, model_iteration=Config.ITERATION)
+    if Config.MODEL_NAME == 'KNN':
+        preds = "Model not Trained yet"
+    # print(preds)
+    return jsonify(preds)
 
 
 @app.route('/upload', methods=['POST'])
