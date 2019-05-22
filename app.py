@@ -76,7 +76,7 @@ def upload():
 
 
 if __name__ == "__main__":
-    import keras
-    import tensorflow as tf
+    # import keras
+    # import tensorflow as tf
 
     app.run(host="0.0.0.0", port=4500)
