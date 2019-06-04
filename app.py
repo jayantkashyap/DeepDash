@@ -34,7 +34,9 @@ def training():
         Config.ITERATION = int(request.get_json()['iteration'])
         Config.NB_CLASSES = len(os.listdir(os.path.join(
             Config.DATASET_DIR, Config.ENTITY_NAME, 'train')))
-        return nn_train()
+
+        msg, history = nn_train()
+        return jsonify({"Message": msg, "History": history})
 
 
 @app.route('/predict', methods=['GET', 'POST'])
