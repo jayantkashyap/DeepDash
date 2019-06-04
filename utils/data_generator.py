@@ -1,3 +1,4 @@
+from utils.config import Config
 from PIL import Image
 from tqdm import tqdm
 import numpy as np
@@ -7,7 +8,6 @@ import cv2
 import os
 
 sys.path.append('..')
-from utils.config import Config
 
 
 def build_nn_dataset_generator():
@@ -24,14 +24,14 @@ def build_nn_dataset_generator():
         fill_mode='nearest',
     )
 
-    # val_datagen = image.ImageDataGenerator(
-    #     preprocessing_function=preprocess_input,
-    #     width_shift_range=0.2,
-    #     height_shift_range=0.2,
-    #     shear_range=0.2,
-    #     zoom_range=0.2,
-    #     fill_mode='nearest',
-    # )
+    val_datagen = image.ImageDataGenerator(
+        preprocessing_function=preprocess_input,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        fill_mode='nearest',
+    )
 
     train_generator = train_datagen.flow_from_directory(
         # f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/train',
@@ -40,13 +40,14 @@ def build_nn_dataset_generator():
         batch_size=Config.BATCH_SIZE
     )
 
-    # validation_generator = val_datagen.flow_from_directory(
-    #     f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/val',
-    #     target_size=Config.TARGET_SIZE,
-    #     batch_size=Config.BATCH_SIZE
-    # )
+    validation_generator = val_datagen.flow_from_directory(
+        # f'{Config.DATASET_DIR}/{Config.ENTITY_NAME}/val',
+        os.path.join(Config.DATASET_DIR, Config.ENTITY_NAME, 'val'),
+        target_size=Config.TARGET_SIZE,
+        batch_size=Config.BATCH_SIZE
+    )
 
-    return train_generator  # , validation_generator
+    return train_generator, validation_generator
 
 
 def build_knn_dataset():
