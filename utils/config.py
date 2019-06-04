@@ -2,7 +2,8 @@ class Config:
     NB_CLASSES = 3
     EPOCHS = 3
     BATCH_SIZE = 32
-    DATASET_DIR = 'repo'
+    DATASET_DIR = '..\\repo'
+    MODEL_DIR = '../data'
     TARGET_SIZE = (224, 224)
 
     # TRAINING HYPERPARAMETERS

@@ -48,14 +48,14 @@ def nn_train():
 
     # print(Config.LABELS_TO_CLASSES)
 
-    if not os.path.isdir(f'data/{Config.ENTITY_NAME}'):
-        print(os.path.isdir(f'data/{Config.ENTITY_NAME}'))
-        os.makedirs(f'data/{Config.ENTITY_NAME}')
+    if not os.path.isdir(os.path.join(Config.MODEL_DIR, Config.ENTITY_NAME)):
+        print(os.path.isdir(os.path.join(Config.MODEL_DIR, Config.ENTITY_NAME)))
+        os.makedirs(os.path.join(Config.MODEL_DIR, Config.ENTITY_NAME))
 
     model.save(
-        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.model')
+        f'{Config.MODEL_DIR}/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}.model')
 
     pickle.dump(Config.LABELS_TO_CLASSES, open(
-        f'data/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
+        f'{Config.MODEL_DIR}/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
     return "Model Trained Successfully!", history
