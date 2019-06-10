@@ -37,7 +37,7 @@ def training():
 
         msg, history = nn_train()
 
-        return jsonify({"Message": msg, "History": json.dumps(str(history))})
+        return jsonify({"Message": msg, "History": history})
         # return msg
 
 

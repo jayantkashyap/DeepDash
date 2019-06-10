@@ -1,6 +1,6 @@
 class Config:
     NB_CLASSES = 3
-    EPOCHS = 1
+    EPOCHS = 15
     BATCH_SIZE = 32
     DATASET_DIR = 'repo'
     MODEL_DIR = '/data'
