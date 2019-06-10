@@ -6,9 +6,10 @@ import cv2
 import os
 
 sys.path.append('..')
-from utils.data_generator import build_nn_dataset_generator
-from models.nn_model import NNModel_VGG19
 from utils.config import Config
+from models.nn_model import NNModel_VGG19
+from utils.data_generator import build_nn_dataset_generator
+
 
 def nn_train():
     from keras.callbacks import ReduceLROnPlateau
@@ -57,4 +58,9 @@ def nn_train():
     pickle.dump(Config.LABELS_TO_CLASSES, open(
         f'{Config.MODEL_DIR}/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
-    return "Model Trained Successfully!", history.history
+    val_loss = history.history['val_loss']
+    val_acc = history.history['val_acc']
+    loss = history.history['loss']
+    acc = history.history['acc']
+    print(val_acc)
+    return "Model Trained Successfully!", {"val_loss": val_loss, "val_acc": val_acc, "loss": loss, "acc": acc}
