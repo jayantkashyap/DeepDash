@@ -1,7 +1,5 @@
 """KNN Classifier Model"""
 
-from utils.data_generator import build_knn_dataset
-from utils.config import Config
 from collections import Counter
 import numpy as np
 import pickle
@@ -10,7 +8,8 @@ import os
 
 
 sys.path.append('..')
-
+from utils.data_generator import build_knn_dataset
+from utils.config import Config
 
 class KNN_Model(object):
 
