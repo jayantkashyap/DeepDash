@@ -75,6 +75,7 @@ def upload():
         os.makedirs(data)
 
     for f in files:
+        print(f)
         f.save(os.path.join(data, secure_filename(f.filename)))
     return "Files Uploaded Successfully!!"
 
