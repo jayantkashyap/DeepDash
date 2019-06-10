@@ -36,7 +36,8 @@ def training():
             Config.DATASET_DIR, Config.ENTITY_NAME, 'train')))
 
         msg, history = nn_train()
-        return jsonify({"Message": msg, "History": history})
+
+        return jsonify({"Message": msg, "History": json.dumps(history)})
 
 
 @app.route('/predict', methods=['GET', 'POST'])

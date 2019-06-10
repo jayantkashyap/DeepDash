@@ -1,6 +1,3 @@
-from utils.data_generator import build_nn_dataset_generator
-from models.nn_model import NNModel
-from utils.config import Config
 from PIL import Image
 import numpy as np
 import pickle
@@ -9,7 +6,9 @@ import cv2
 import os
 
 sys.path.append('..')
-
+from utils.data_generator import build_nn_dataset_generator
+from models.nn_model import NNModel_VGG19
+from utils.config import Config
 
 def nn_train():
     from keras.callbacks import ReduceLROnPlateau
@@ -19,7 +18,7 @@ def nn_train():
     K.clear_session()
     tf.reset_default_graph()
 
-    model = NNModel().build()
+    model = NNModel_VGG19().build()
     reduce_lr_callback = ReduceLROnPlateau(monitor='val_loss',
                                            factor=0.1,
                                            patience=3,
@@ -58,4 +57,4 @@ def nn_train():
     pickle.dump(Config.LABELS_TO_CLASSES, open(
         f'{Config.MODEL_DIR}/{Config.ENTITY_NAME}/{Config.MODEL_NAME}_{Config.ITERATION}_classes.p', 'wb'))
 
-    return "Model Trained Successfully!", history
+    return "Model Trained Successfully!", history.history

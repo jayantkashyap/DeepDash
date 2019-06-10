@@ -2,9 +2,7 @@
 
 import sys
 sys.path.append('..')
-
 from utils.config import Config
-
 
 class NNModel_VGG19(object):
 
