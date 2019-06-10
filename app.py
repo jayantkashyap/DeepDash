@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from werkzeug import secure_filename
 from models import knn_model, nn_model
 from utils.config import Config, load_trained_model
-from utils.train import nn_train
+from utils.train import nn_train_VGG19, nn_train_InceptionV3
 from utils.predict import predict
 from PIL import Image
 import base64
@@ -26,8 +26,12 @@ def training():
     if request.get_json()['modelName'] == 'KNN':
         Config.ENTITY_NAME = request.get_json()['entityName']
         Config.ITERATION = int(request.get_json()['iteration'])
+        Config.NB_CLASSES = len(os.listdir(os.path.join(
+            Config.DATASET_DIR, Config.ENTITY_NAME, 'train')))
 
-        return knn_model.KNN_Model(5).train()
+        msg, history = nn_train_InceptionV3()
+
+        return jsonify({"Message": msg, "History": history})
 
     if request.get_json()['modelName'] == 'DNN':
         Config.ENTITY_NAME = request.get_json()['entityName']
@@ -35,7 +39,7 @@ def training():
         Config.NB_CLASSES = len(os.listdir(os.path.join(
             Config.DATASET_DIR, Config.ENTITY_NAME, 'train')))
 
-        msg, history = nn_train()
+        msg, history = nn_train_VGG19()
 
         return jsonify({"Message": msg, "History": history})
         # return msg

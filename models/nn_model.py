@@ -47,9 +47,9 @@ class NNModel_InceptionV3(object):
 
     def __init__(self):
 
-        from keras.applications.vgg19 import VGG19
+        from keras.applications.inception_v3 import InceptionV3
 
-        self.base_model = VGG19(weights='imagenet', include_top=False)
+        self.base_model = InceptionV3(weights='imagenet', include_top=False)
         self.nb_classes = Config.NB_CLASSES
         self.model = None
 
@@ -82,10 +82,10 @@ class NNModel_InceptionV3(object):
         return self.model
 
 
-if __name__ == "__main__":
-    from keras import backend as K
+# if __name__ == "__main__":
+#     from keras import backend as K
 
-    model = NNModel().build()
-    print(model.summary())
+#     model = NNModel().build()
+#     print(model.summary())
 
-    K.clear_session()
+#     K.clear_session()
